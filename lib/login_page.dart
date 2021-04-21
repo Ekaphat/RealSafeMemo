@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/screens/note_list.dart';
-
+import 'package:flutter_tutorial/screens/register.dart';
 
 Color c = const Color.fromRGBO(9, 50, 94, 80);
 
@@ -13,6 +14,33 @@ class LoginPage extends StatefulWidget{
 
 class _LoginPageState extends State<LoginPage>{
 
+  String _email;
+  String _password;
+
+  Future<void> _createUser() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+      print("User: $userCredential");
+    } on FirebaseAuthException catch (e) {
+      print("Error: $e");
+    } catch (e){
+      print("Error: $e");
+    }
+  }
+
+  Future<void> _login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+      print("User: $userCredential");
+    } on FirebaseAuthException catch (e) {
+      print("Error: $e");
+    } catch (e){
+      print("Error: $e");
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -24,18 +52,20 @@ class _LoginPageState extends State<LoginPage>{
         )
     );
 
-    final email = TextFormField(
+    final email = TextField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: '',
+      //initialValue: '',
       style: TextStyle(
         color: Colors.white,
         decorationColor: Colors.white,
       ),
-
+      onChanged: (value){
+        _email = value;
+      },
       decoration: InputDecoration(
 
-          hintText: 'email',
+          hintText: 'email...',
           hintStyle: TextStyle( color: Colors.white),
           fillColor: Colors.white,
           contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
@@ -49,17 +79,18 @@ class _LoginPageState extends State<LoginPage>{
       ),
     );
 
-    final password = TextFormField(
+    final password = TextField(
       keyboardType: TextInputType.text,
       autofocus: false,
-      initialValue: '',
       style: TextStyle(
         color: Colors.white,
-
       ),
+      onChanged: (value){
+        _password = value;
+      },
       obscureText: true,
       decoration: InputDecoration(
-          hintText: 'password',
+          hintText: 'password...',
           hintStyle: TextStyle( color: Colors.white),
           contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           enabledBorder: OutlineInputBorder(
@@ -69,32 +100,36 @@ class _LoginPageState extends State<LoginPage>{
       ),
     );
 
-    final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
+    final createUserButton = Padding(
+      padding: EdgeInsets.all( 10.0),
+      child: MaterialButton(
+        minWidth: 150 ,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24)
         ),
         onPressed: (){
-          Navigator.of(context).pushNamed(NoteList.tag);
+          Navigator.of(context).pushNamed(register.tag);
         },
+        padding: EdgeInsets.all(12),
+        color: Colors.lightBlue,
+        child: Text('Create account',style: TextStyle(color: Colors.white),),
+      ),
+    );
+
+    final loginButton = Padding(
+      padding: EdgeInsets.all( 10.0),
+      child: MaterialButton(
+        minWidth: 150 ,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24)
+        ),
+        onPressed: _login,
         padding: EdgeInsets.all(12),
         color: Colors.lightBlue,
         child: Text('Log in',style: TextStyle(color: Colors.white),),
       ),
     );
 
-    final forgotLabel = RaisedButton(
-      child: Text(
-        'Forgot password',
-        style: TextStyle(
-            color: Colors.black54
-        ),
-      ),
-      onPressed: (){
-
-      },
-    );
 
     return Scaffold(
       backgroundColor: c,
@@ -109,9 +144,10 @@ class _LoginPageState extends State<LoginPage>{
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
-            loginButton,
+            Row(
+              children: [createUserButton,loginButton],
+            )
             //SizedBox(height: 24.0), // not necessary because flat button has their own height
-            forgotLabel,
           ],
         ),
       ),

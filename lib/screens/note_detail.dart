@@ -40,6 +40,7 @@ class NoteDetailState extends State<NoteDetail>{
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor:  Colors.indigo[900],
           title: Text(appBarTitle),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -120,9 +121,7 @@ class NoteDetailState extends State<NoteDetail>{
                   children: [
                     Expanded(
                         child: RaisedButton(
-                          color: Theme
-                              .of(context)
-                              .primaryColorDark,
+                          color: Colors.indigo[900],
                           textColor: Theme
                               .of(context)
                               .primaryColorLight,
@@ -145,9 +144,7 @@ class NoteDetailState extends State<NoteDetail>{
 
                     Expanded(
                         child: RaisedButton(
-                          color: Theme
-                              .of(context)
-                              .primaryColorDark,
+                          color: Colors.indigo[900],
                           textColor: Theme
                               .of(context)
                               .primaryColorLight,

@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/models/note.dart';
 import 'package:flutter_tutorial/utils/database_helper.dart';
 import 'package:flutter_tutorial/screens/note_detail.dart';
 import 'package:sqflite/sqflite.dart';
+
+
+Color c = const Color.fromRGBO(9, 50, 94, 80);
 
 class NoteList extends StatefulWidget{
   static String tag = 'note-list';
@@ -26,18 +30,36 @@ class NoteListState extends State<NoteList>{
       updateListView();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Notes'),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.indigo[900],
       ),
-      body: getNoteListView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          debugPrint('FAB clicked');
-          navigateToDetail(Note('', '',2),'Add Note');
-        },
-        tooltip: 'Add Note',
-        child: Icon(Icons.add),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Notes'),
+        ),
+        body: getNoteListView(),
+        bottomNavigationBar: BottomAppBar(
+          child: Container(
+            child:  MaterialButton(
+              onPressed: () async{
+                await FirebaseAuth.instance.signOut();
+              },
+              child: Text("Sign out"),
+            ),
+          ),
+        ),
+
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            debugPrint('FAB clicked');
+            navigateToDetail(Note('', '',2),'Add Note');
+          },
+          backgroundColor: Colors.indigo[900],
+          tooltip: 'Add Note',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
